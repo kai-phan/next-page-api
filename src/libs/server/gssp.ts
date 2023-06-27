@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { getServerSession, Session } from 'next-auth';
 
 import { options } from 'src/pages/api/auth/[...nextauth]';
-import { isAdmin } from 'src/util/helper';
+import { isAdmin } from 'src/utils/helper';
 
 export type GetServerSideWithInjectedPropsContext<
   Params extends ParsedUrlQuery = ParsedUrlQuery,

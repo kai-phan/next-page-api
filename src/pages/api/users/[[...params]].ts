@@ -56,6 +56,7 @@ class UserRouter {
 
   // GET /api/users/:id (read one)
   @Get('/:id')
+  @HttpCode(200)
   public fetchUser(@Param('id', ParseNumberPipe) id: number): User {
     return this.findUserById(id);
   }
@@ -64,7 +65,7 @@ class UserRouter {
   @Put('/:id')
   public updateUser(
     @Param('id', ParseNumberPipe) id: number,
-    @Body(ValidationPipe) body: UpdateUserInput,
+    @Body(ValidationPipe({})) body: UpdateUserInput,
   ): User {
     const user = this.findUserById(id);
 

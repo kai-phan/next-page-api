@@ -13,7 +13,14 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <SWRConfig>
+      <SWRConfig
+        value={{
+          onError: (err) => {
+            console.log(err);
+          },
+          shouldRetryOnError: false,
+        }}
+      >
         <ClientAuth component={Component} pageProps={pageProps} />
       </SWRConfig>
     </SessionProvider>

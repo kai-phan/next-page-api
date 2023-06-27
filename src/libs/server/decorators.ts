@@ -8,7 +8,7 @@ import {
 import { getServerSession } from 'next-auth';
 
 import { options } from 'src/pages/api/auth/[...nextauth]';
-import { isAdmin } from 'src/util/helper';
+import { isAdmin } from 'src/utils/helper';
 
 export const AuthGuard = createMiddlewareDecorator(
   async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {

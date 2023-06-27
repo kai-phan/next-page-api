@@ -11,7 +11,7 @@ import {
   withCacheControl,
   withExternalAuth,
 } from 'src/libs/server/gssp';
-import { compose } from 'src/util/helper';
+import { compose } from 'src/utils/helper';
 
 export default function GSSP({ events }) {
   return (

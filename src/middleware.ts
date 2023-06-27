@@ -7,11 +7,17 @@ const getPathAndQuery = (url: NextURL) => {
 };
 
 export const config = {
-  matcher: ['/api/jobs', '/api/events/:id*'],
+  matcher: ['/api/:path*'],
 };
+
+const ignorePaths = ['/api/auth', '/api/users'];
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
+
+  if (ignorePaths.some((path) => req.nextUrl.pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
 
   if (!token) {
     return new NextResponse(

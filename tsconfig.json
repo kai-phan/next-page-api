@@ -22,7 +22,8 @@
     "incremental": true,
     "paths": {
       "src/*": ["./src/*"]
-    }
+    },
+    "baseUrl": "./",
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src"],
   "exclude": ["node_modules"]
