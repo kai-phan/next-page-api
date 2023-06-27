@@ -1,72 +1,88 @@
-const handleHTTPError = (res: Response) => {
-  switch (res.status) {
-    // TODO: handle other status code
-    default: {
-      throw res;
-    }
-  }
+import { createRequest } from './handleRequest';
+import { handleError, handleHTTPError, handleResult } from './handleResponse';
+
+export type ExtraOptions = {
+  returnError?: boolean;
+  customResponseParser?: (res: Response) => Promise<any>;
+  body?: any;
 };
 
-const handleResponseByContentType = (res: Response) => {
-  if (res.headers.get('Content-Type')?.includes('text')) {
-    return res.text();
-  }
+export type CustomRequestInfo = RequestInfo | URL | [string, any];
+export type CustomRequestInit = Omit<RequestInit, 'body'> & ExtraOptions;
+export type ReturnError =
+  | { data: null; error: any }
+  | { data: any; error: null };
 
-  // TODO: handle other content types like form data, array buffer, etc.
-  return res.json();
-};
+export interface Fetcher {
+  <T extends boolean | undefined>(
+    requestInfo: CustomRequestInfo,
+    init?: Omit<CustomRequestInit, 'returnError'> & { returnError?: T },
+  ): Promise<T extends true ? ReturnError : any>;
 
-const handleData = (data: any) => {
-  // TODO: handle other data types
-  return data;
-};
+  get<T extends boolean | undefined>(
+    requestInfo: CustomRequestInfo,
+    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
+      returnError?: T;
+    },
+  ): Promise<T extends true ? ReturnError : any>;
 
-const handleRequestInfo = (request: Request) => {
-  return request;
-};
+  post<T extends boolean | undefined>(
+    requestInfo: CustomRequestInfo,
+    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
+      returnError?: T;
+    },
+  ): Promise<T extends true ? ReturnError : any>;
 
-const createRequest = (requestInfo: RequestInfo | URL, init?: RequestInit) => {
-  if (requestInfo instanceof Request) {
-    return requestInfo;
-  }
+  put<T extends boolean | undefined>(
+    requestInfo: CustomRequestInfo,
+    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
+      returnError?: T;
+    },
+  ): Promise<T extends true ? ReturnError : any>;
 
-  if (Array.isArray(requestInfo)) {
-    const url = requestInfo[0];
-    const search = requestInfo[1];
-    // Example: fetcher(['https://example.com', { size: 10 }])
-    if (typeof search === 'object' && search !== null) {
-      const searchParams = new URLSearchParams(search);
+  delete<T extends boolean | undefined>(
+    requestInfo: CustomRequestInfo,
+    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
+      returnError?: T;
+    },
+  ): Promise<T extends true ? ReturnError : any>;
 
-      return new Request(
-        searchParams.size ? `${url}?${searchParams.toString()}` : url,
-        init,
-      );
-    }
+  patch<T extends boolean | undefined>(
+    requestInfo: CustomRequestInfo,
+    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
+      returnError?: T;
+    },
+  ): Promise<T extends true ? ReturnError : any>;
+}
 
-    // Example: fetcher(['https://example.com', 'search'])
-    return new Request(`${url}/${search}`, init);
-  }
-
-  return new Request(requestInfo, init);
-};
-
-export default function fetcher(
-  requestInfo: RequestInfo | URL,
-  init: RequestInit = {},
-) {
+function fetcher(requestInfo: CustomRequestInfo, init: CustomRequestInit = {}) {
   const req = createRequest(requestInfo, init);
 
-  return fetch(handleRequestInfo(req))
+  return fetch(req)
     .then((res) => {
-      // TODO: handle both server and client side error (don't throw error on server side)
       if (!res.ok) {
-        return handleHTTPError(res);
+        return handleHTTPError(res, init);
       }
 
       return res;
     })
-    .then(handleResponseByContentType)
-    .then((data) => {
-      return handleData(data);
+    .then((res) => {
+      return handleResult(res, init);
+    })
+    .catch((err) => {
+      return handleError(err, init);
     });
 }
+
+const methods = ['get', 'post', 'put', 'delete', 'patch'];
+
+methods.forEach((method) => {
+  fetcher[method] = (
+    requestInfo: CustomRequestInfo,
+    init: CustomRequestInit = {},
+  ) => {
+    return fetcher(requestInfo, { ...init, method });
+  };
+});
+
+export default fetcher as Fetcher;

@@ -4,7 +4,7 @@ import useSWRMutation, {
   SWRMutationConfiguration,
 } from 'swr/mutation';
 
-export type CreateSWRMutationOptions<TData, TError, TKey extends Key, TArgs> = {
+export type CreateSWRMutationOptions<TData, TError, TArgs, TKey extends Key> = {
   primaryKey: string;
   fetcher: MutationFetcher<TData, TArgs, TKey>;
 } & Omit<SWRMutationConfiguration<TData, TError, TArgs>, 'fetcher'>;
@@ -21,9 +21,9 @@ export const createSWRMutation = <
   TVariable = unknown,
   TArgs = unknown,
   TError = unknown,
-  TKey extends Key = Key,
+  TKey extends Key = [string, TVariable],
 >(
-  options: CreateSWRMutationOptions<TData, TError, TKey, TArgs>,
+  options: CreateSWRMutationOptions<TData, TError, TArgs, TKey>,
 ) => {
   const { primaryKey, fetcher, ...createdOptions } = options;
 

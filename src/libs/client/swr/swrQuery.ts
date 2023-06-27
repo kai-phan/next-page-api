@@ -18,7 +18,7 @@ export const createSWR = <
   TData,
   TVariable = unknown,
   TError = unknown,
-  TKey extends Key = Key,
+  TKey extends Key = [string, TVariable],
 >(
   options: CreateSWROptions<TData, TError, TKey>,
 ) => {
