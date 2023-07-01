@@ -19,40 +19,11 @@ export interface Fetcher {
     init?: Omit<CustomRequestInit, 'returnError'> & { returnError?: T },
   ): Promise<T extends true ? ReturnError : any>;
 
-  get<T extends boolean | undefined>(
-    requestInfo: CustomRequestInfo,
-    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
-      returnError?: T;
-    },
-  ): Promise<T extends true ? ReturnError : any>;
-
-  post<T extends boolean | undefined>(
-    requestInfo: CustomRequestInfo,
-    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
-      returnError?: T;
-    },
-  ): Promise<T extends true ? ReturnError : any>;
-
-  put<T extends boolean | undefined>(
-    requestInfo: CustomRequestInfo,
-    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
-      returnError?: T;
-    },
-  ): Promise<T extends true ? ReturnError : any>;
-
-  delete<T extends boolean | undefined>(
-    requestInfo: CustomRequestInfo,
-    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
-      returnError?: T;
-    },
-  ): Promise<T extends true ? ReturnError : any>;
-
-  patch<T extends boolean | undefined>(
-    requestInfo: CustomRequestInfo,
-    init?: Omit<CustomRequestInit, 'method' | 'returnError'> & {
-      returnError?: T;
-    },
-  ): Promise<T extends true ? ReturnError : any>;
+  get: Fetcher;
+  post: Fetcher;
+  put: Fetcher;
+  delete: Fetcher;
+  patch: Fetcher;
 }
 
 function fetcher(requestInfo: CustomRequestInfo, init: CustomRequestInit = {}) {
