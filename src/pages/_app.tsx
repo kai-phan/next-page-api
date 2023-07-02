@@ -6,6 +6,8 @@ import 'src/styles/globals.css';
 import { SWRConfig } from 'swr';
 
 import { ClientAuth } from 'src/components/application';
+import ThemeConfig from 'src/components/application/ThemeConfig';
+import { SiderAndHeader } from 'src/components/layouts';
 
 export default function App({
   Component,
@@ -21,7 +23,11 @@ export default function App({
           shouldRetryOnError: false,
         }}
       >
-        <ClientAuth component={Component} pageProps={pageProps} />
+        <ThemeConfig>
+          <SiderAndHeader>
+            <ClientAuth component={Component} pageProps={pageProps} />
+          </SiderAndHeader>
+        </ThemeConfig>
       </SWRConfig>
     </SessionProvider>
   );

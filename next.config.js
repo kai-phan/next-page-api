@@ -1,4 +1,7 @@
-const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD} = require('next/constants')
+const {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} = require('next/constants');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = (phase) => {
@@ -7,7 +10,7 @@ const nextConfig = (phase) => {
 
   return {
     reactStrictMode: isProd,
-  }
-}
+  };
+};
 
 module.exports = nextConfig;
