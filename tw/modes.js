@@ -7,7 +7,7 @@ export default plugin(({ addVariant, addBase, theme }) => {
 
   addBase({
     'html.dark': {
-      backgroundColor: 'rgb(var(--grey-900))',
+      backgroundColor: 'rgb(var(--grey-950))',
     },
   });
 });

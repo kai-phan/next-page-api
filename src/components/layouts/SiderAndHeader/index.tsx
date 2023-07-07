@@ -1,14 +1,38 @@
 import React from 'react';
 
-import { useConfigContext } from 'src/components/application/ThemeConfig';
+import { useConfig } from 'src/components/application/ThemeConfig';
 
 export type Props = {
   className?: string;
   children?: React.ReactNode;
 };
 
+const Sider: React.FC<Props> = ({ children }) => {
+  return (
+    <aside className="fixed left-0 bottom-0 top-[var(--header-height)] w-[var(--sider-width)] border-r border-grey-100 dark:border-grey-800 bg-white dark:bg-grey-900">
+      {children}
+    </aside>
+  );
+};
+
+const Content: React.FC<Props> = ({ children }) => {
+  return (
+    <div className="mt-[var(--header-height)] ml-[var(--sider-width)] p-6 dark:bg-grey-950 dark:text-white">
+      {children}
+    </div>
+  );
+};
+
+const Header: React.FC<Props> = ({ children }) => {
+  return (
+    <header className="fixed top-0 left-0 right-0 z-10 h-[var(--header-height)] border-b border-grey-100 dark:border-grey-800 bg-white dark:bg-grey-900 flex">
+      {children}
+    </header>
+  );
+};
+
 const SiderAndHeader: React.FC<Props> = ({ children }) => {
-  const { handleSwitchMode, mode } = useConfigContext();
+  const { handleSwitchMode, mode } = useConfig();
 
   return (
     <main
@@ -20,7 +44,7 @@ const SiderAndHeader: React.FC<Props> = ({ children }) => {
         } as React.CSSProperties
       }
     >
-      <header className="fixed top-0 left-0 right-0 z-10 h-[var(--header-height)] border-b border-grey-200 dark:border-grey-700 bg-white dark:bg-grey-800 flex">
+      <Header>
         <div className="w-[var(--sider-width)] h-full"></div>
         <div className="flex items-end p-6">
           <button
@@ -31,11 +55,9 @@ const SiderAndHeader: React.FC<Props> = ({ children }) => {
             {mode}
           </button>
         </div>
-      </header>
-      <aside className="fixed left-0 bottom-0 top-[var(--header-height)] w-[var(--sider-width)] border-r border-grey-200 dark:border-grey-700 bg-white dark:bg-grey-800"></aside>
-      <div className="mt-[var(--header-height)] ml-[var(--sider-width)] p-6 dark:bg-grey-900 dark:text-white">
-        {children}
-      </div>
+      </Header>
+      <Sider />
+      <Content>{children}</Content>
     </main>
   );
 };

@@ -16,7 +16,7 @@ const ConfigContext = React.createContext<ConfigContextType>(
   {} as ConfigContextType,
 );
 
-export const useConfigContext = () => {
+export const useConfig = () => {
   return React.useContext(ConfigContext);
 };
 
