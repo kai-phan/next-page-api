@@ -56,4 +56,74 @@ methods.forEach((method) => {
   };
 });
 
+export const createFetcher = (
+  baseURL: string,
+  options: CustomRequestInit = {},
+) => {
+  const makeURL = (baseURL: string, url: string) => {
+    if (baseURL.endsWith('/') && url.startsWith('/')) {
+      return baseURL + url.slice(1);
+    }
+
+    if (!baseURL.endsWith('/') && !url.startsWith('/')) {
+      return baseURL + '/' + url;
+    }
+
+    return baseURL + url;
+  };
+
+  const normalized = (
+    requestInfo: CustomRequestInfo,
+    init: CustomRequestInit,
+  ) => {
+    let newRequestInfo = requestInfo;
+
+    if (typeof requestInfo === 'string') {
+      newRequestInfo = makeURL(baseURL, requestInfo);
+    }
+
+    if (Array.isArray(requestInfo)) {
+      const [url, searchOrPath] = requestInfo;
+
+      newRequestInfo = [makeURL(baseURL, url), searchOrPath];
+    }
+
+    if (newRequestInfo instanceof Request) {
+      newRequestInfo = new Request(
+        {
+          ...newRequestInfo,
+          url: makeURL(baseURL, newRequestInfo.url),
+        },
+        init,
+      );
+    }
+
+    return {
+      newRequestInfo,
+      newInit: options,
+    };
+  };
+
+  const fn = (requestInfo: CustomRequestInfo, init: CustomRequestInit = {}) => {
+    const { newRequestInfo, newInit } = normalized(requestInfo, init);
+
+    return fetcher(newRequestInfo, { ...init, ...newInit });
+  };
+
+  const methods = ['get', 'post', 'put', 'delete', 'patch'];
+
+  methods.forEach((method) => {
+    fn[method] = (
+      requestInfo: CustomRequestInfo,
+      init: CustomRequestInit = {},
+    ) => {
+      const { newRequestInfo, newInit } = normalized(requestInfo, init);
+
+      return fetcher(newRequestInfo, { ...init, ...newInit, method });
+    };
+  });
+
+  return fn as Fetcher;
+};
+
 export default fetcher as Fetcher;

@@ -1,5 +1,14 @@
 import NextAuth, { AuthOptions, User } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
+
+import jwtDecode from 'jwt-decode';
+
+const refreshAccessToken = (token): JWT => {
+  console.log('refreshAccessToken', token);
+
+  return token;
+};
 
 export const options = {
   providers: [
@@ -12,7 +21,6 @@ export const options = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        console.log(process.env.API_URL);
         const res = await fetch(`${process.env.API_URL}/auth/authenticate`, {
           method: 'POST',
           headers: {
@@ -35,11 +43,7 @@ export const options = {
   callbacks: {
     signIn({ user }) {
       console.log('Signin', { user });
-      if (user.status === 'success') {
-        return true;
-      } else {
-        return false;
-      }
+      return user.status === 'success';
     },
     jwt({ token, user, account, profile }) {
       //USER object is the response returned from the authorize callback
@@ -52,6 +56,14 @@ export const options = {
           ...token,
           ...user.data,
         };
+      }
+
+      const accessToken = token?.token.access_token || '';
+      const expiresAt = jwtDecode<{ exp: number }>(accessToken).exp;
+
+      if (expiresAt && expiresAt * 1000 < Date.now()) {
+        // If the access token has expired, try to refresh it
+        return refreshAccessToken(token);
       }
 
       return token;
