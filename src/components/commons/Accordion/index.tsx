@@ -50,8 +50,8 @@ export const AccordionItem: React.FC<ItemProps> = ({
   id,
 }) => {
   return (
-    <div key={id} onClick={() => onClick?.(id)}>
-      <div>{title}</div>
+    <div key={id}>
+      <div onClick={() => onClick?.(id)}>{title}</div>
       {isOpened && <div>{children}</div>}
     </div>
   );

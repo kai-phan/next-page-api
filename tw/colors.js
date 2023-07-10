@@ -21,7 +21,7 @@ const colors = {
     900: '#5c0011',
     950: '#3f000a',
   },
-  warn: {
+  warning: {
     50: '#fff7e6',
     100: '#ffe7ba',
     200: '#ffd591',
