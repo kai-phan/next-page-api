@@ -12,6 +12,8 @@ export const swrAuthError = async (err) => {
     if (err instanceof Response) {
       const res = await err.json();
 
+      console.log(res);
+
       const data = await signOut({
         redirect: false,
         callbackUrl: '/api/auth/signin',
