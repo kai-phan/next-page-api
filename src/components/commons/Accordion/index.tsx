@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BaseAccordion } from 'src/components/bases';
+import { BaseAccordion } from 'src/components/shared';
 
 export type Props = {
   className?: string;

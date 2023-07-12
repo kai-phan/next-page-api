@@ -1,9 +1,8 @@
 import React from 'react';
-import { toast } from 'react-hot-toast';
 
 import { NextPage } from 'next';
 
-import { Button } from 'src/components/commons';
+import { Button, LinkButton } from 'src/components/commons';
 
 export type Props = {
   className?: string;
@@ -25,42 +24,61 @@ const icon = (
 );
 
 const Buttons: NextPage<Props> = () => {
+  const [state] = React.useState({
+    disabled: false,
+    loading: false,
+    status: 'default',
+    shape: 'rounded',
+    children: 'Click me',
+    icon: icon,
+    isLabelIcon: true,
+  } as any);
+
   return (
     <section className="space-y-4">
       <div className="flex gap-6 items-center">
-        <Button
-          variant={'secondary'}
-          size="small"
-          onClick={() => toast.error('hai ')}
-        >
-          Click
+        <Button size="small" variant={'primary'} {...state}>
+          {state.children}
         </Button>
-        <Button variant={'secondary'}>Click</Button>
-        <Button variant={'secondary'} size={'large'}>
-          Click
+        <Button size={'medium'} variant={'primary'} {...state}>
+          {state.children}
+        </Button>
+        <Button size={'large'} variant={'primary'} {...state}>
+          {state.children}
         </Button>
       </div>
       <div className="flex gap-6 items-center">
-        <Button variant={'secondary'} size="small" icon={icon}>
-          Click
+        <Button size="small" variant={'outline'} {...state}>
+          {state.children}
         </Button>
-        <Button variant={'secondary'} icon={icon}>
-          Click
+        <Button size={'medium'} variant={'outline'} {...state}>
+          {state.children}
         </Button>
-        <Button variant={'secondary'} size={'large'} icon={icon}>
-          Click
+        <Button size={'large'} variant={'outline'} {...state}>
+          {state.children}
         </Button>
       </div>
       <div className="flex gap-6 items-center">
-        <Button variant={'secondary'} size="small" status="info" icon={icon}>
-          Click
+        <Button size="small" variant={'secondary'} {...state}>
+          {state.children}
         </Button>
-        <Button variant={'secondary'} icon={icon} status="info">
-          Click
+        <Button size={'medium'} variant={'secondary'} {...state}>
+          {state.children}
         </Button>
-        <Button variant={'secondary'} size={'large'} status="info" icon={icon}>
-          Click
+        <Button size={'large'} variant={'secondary'} {...state}>
+          {state.children}
         </Button>
+      </div>
+      <div className="flex gap-6 items-center">
+        <LinkButton size={'small'} variant={'secondary'} {...state}>
+          {state.children}
+        </LinkButton>
+        <LinkButton size={'medium'} variant={'secondary'} {...state}>
+          {state.children}
+        </LinkButton>
+        <LinkButton size={'large'} variant={'secondary'} {...state}>
+          {state.children}
+        </LinkButton>
       </div>
     </section>
   );
